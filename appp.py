@@ -156,8 +156,6 @@ def predict():
     emotion = encoder.inverse_transform(prediction)[0]
     return jsonify({'emotion': emotion})
 
-tf.keras.backend.clear_session()
-
 # Home route to check if the server is running
 @app.route('/')
 def home():
