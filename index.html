@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Detection</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f3f3f3;
+        }
+
+        /* Title Styles */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            color: #333;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Form Container */
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 400px;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        /* Textbox Styles */
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+            resize: none;
+        }
+
+        textarea:focus {
+            border-color: #007BFF;
+            outline: none;
+            box-shadow: 2px 2px 8px rgba(0, 123, 255, 0.4);
+        }
+
+        /* Submit Button */
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #fff;
+            background: #007BFF;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        /* Result Styles */
+        #result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Emotion Detection</h1>
+    <div class="form-container">
+        <textarea id="inputText" placeholder="Enter your text here..."></textarea>
+        <button onclick="predictEmotion()">Submit</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:5000/predict";
+
+        async function predictEmotion() {
+            const text = document.getElementById("inputText").value.trim();
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = ""; // Clear previous result
+
+            if (!text) {
+                resultDiv.innerHTML = "<span style='color: black;'>Please enter some text!</span>";
+                return;
+            }
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ text }),
+                });
+
+                if (!response.ok) {
+                    throw new Error("Error with API request");
+                }
+
+                const data = await response.json();
+                const emotion = data.emotion;
+                let color = "#333";
+
+                // Determine color based on emotion
+                if (emotion.toLowerCase() === "anger") {
+                    color = "red";
+                } else if (emotion.toLowerCase() === "fear") {
+                    color = "blue";
+                } else if (emotion.toLowerCase() === "joy") {
+                    color = "green";
+                }
+
+                // Capitalize the first letter and display the result
+                const formattedEmotion = emotion.charAt(0).toUpperCase() + emotion.slice(1);
+                resultDiv.innerHTML = `<strong style="color: ${color};">${formattedEmotion}</strong>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<span style='color: red;'>An error occurred: ${error.message}</span>`;
+            }
+        }
+    </script>
+</body>
+</html>
