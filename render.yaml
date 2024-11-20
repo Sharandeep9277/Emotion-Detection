@@ -3,5 +3,5 @@ services:
     name: flask-emotion-detector
     env: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn app:app"
+    startCommand: "gunicorn appp:app"
     region: oregon
