@@ -76,7 +76,7 @@ X_train_tfidf = tfidf.fit_transform(X_train).toarray()
 X_test_tfidf = tfidf.transform(X_test).toarray()
 
 # Dimensionality reduction with PCA
-pca = PCA(n_components=300)
+pca = PCA(n_components=100)
 X_train_pca = pca.fit_transform(X_train_tfidf)
 X_test_pca = pca.transform(X_test_tfidf)
 
@@ -155,6 +155,8 @@ def predict():
     prediction = np.argmax(loaded_model.predict(reduced), axis=1)
     emotion = encoder.inverse_transform(prediction)[0]
     return jsonify({'emotion': emotion})
+
+tf.keras.backend.clear_session()
 
 # Home route to check if the server is running
 @app.route('/')
