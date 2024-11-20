@@ -76,7 +76,7 @@ X_train_tfidf = tfidf.fit_transform(X_train).toarray()
 X_test_tfidf = tfidf.transform(X_test).toarray()
 
 # Dimensionality reduction with PCA
-pca = PCA(n_components=100)
+pca = PCA(n_components=50)
 X_train_pca = pca.fit_transform(X_train_tfidf)
 X_test_pca = pca.transform(X_test_tfidf)
 
